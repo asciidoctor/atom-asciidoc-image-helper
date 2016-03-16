@@ -6,3 +6,12 @@ An Atom plugin for Markdown grammar. Create image file relative to the markdown 
 1. Take a screenshot or copy any image to the clipboard.
 2. Paste it into Atom markdown editor
 3. See that an directory name "assets" was create, and the directory has a png file, and a url was inserted.
+
+## Example
+* Before
+
+    ![before](assets/README-31bb2.png)
+
+* After
+
+    ![after](assets/README-d1eba.png)
