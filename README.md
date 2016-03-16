@@ -10,8 +10,8 @@ An Atom plugin for Markdown grammar. Create image file relative to the markdown 
 ## Example
 * Before
 
-    ![before](assets/README-31bb2.png)
+    ![before](https://github.com/bigyuki/markdown-image-helper/raw/master/assets/README-31bb2.png)
 
 * After
 
-    ![after](assets/README-d1eba.png)
+    ![after](https://github.com/bigyuki/markdown-image-helper/raw/master/assets/README-d1eba.png)
