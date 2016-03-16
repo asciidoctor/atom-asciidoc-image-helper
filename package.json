@@ -1,0 +1,12 @@
+{
+  "name": "markdown-image-helper",
+  "main": "./lib/main",
+  "version": "1.0.0",
+  "description": "When paste image to markdown ,this will make a directory name \"assets\" and will paste the image as a png file in this image ,then will insert a relative image url",
+  "keywords": ["markdown","image","clipboard","paste","copy"],
+  "repository": "https://github.com/atom/test",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  }
+}
