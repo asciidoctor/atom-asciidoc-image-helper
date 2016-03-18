@@ -7,9 +7,8 @@ module.exports = MarkdownImgHelper =
 		atom.commands.onWillDispatch (e)  =>
 			if e.type is "core:paste"
 
-
-				console.log(e)
 				editor = atom.workspace.getActiveTextEditor()
+				return unless editor
 				grammar = editor.getGrammar()
 				return unless grammar
 				return unless grammar.scopeName is 'source.gfm'
