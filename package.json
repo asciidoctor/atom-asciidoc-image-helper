@@ -1,7 +1,7 @@
 {
   "name": "markdown-image-helper",
   "main": "./lib/main",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "When paste image to markdown ,this will make a directory name \"assets\" and will paste the image as a png file in this image ,then will insert a relative image url",
   "keywords": [
     "markdown",
