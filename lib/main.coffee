@@ -31,7 +31,7 @@ module.exports = MarkdownImgHelper =
 				md5 = crypto.createHash 'md5'
 				md5.update(imgbuffer)
 
-				filename = "#{thefile.getBaseName().replace(/\.\w+$/, '')}-#{md5.digest('hex').slice(0,5)}.png"
+				filename = "#{thefile.getBaseName().replace(/\.\w+$/, '').replace(/\s+/g,'')}-#{md5.digest('hex').slice(0,5)}.png"
 
 				@createDirectory assetsDirPath, ()=>
 					@writePng assetsDirPath+'/', filename, imgbuffer, ()=>
