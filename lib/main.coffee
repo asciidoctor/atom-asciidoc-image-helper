@@ -38,7 +38,7 @@ module.exports = AsciidocImgHelper =
 						# ascClip = "assets/#{filename}"
 						# clipboard.writeText(ascClip)
 
-						@insertUrl "images/#{filename}",editor
+						@insertUrl "image::images/#{filename}[]",editor
 
 				return false
 
