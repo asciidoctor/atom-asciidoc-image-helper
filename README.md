@@ -8,12 +8,3 @@ Conversion of [markdown-image-helper](https://github.com/bigyuki/markdown-image-
 1. Take a screenshot or copy any image to the clipboard.
 2. Paste it into Atom AsciiDoc editor.
 3. See that an directory name "images" was created, the directory has a png file, and a url was inserted.
-
-## Example
-* Before
-
-    ![before](https://github.com/bwklein/asciidoc-image-helper/raw/master/assets/README-31bb2.png)
-
-* After
-
-    ![after](https://github.com/bwklein/asciidoc-image-helper/raw/master/assets/README-d1eba.png)

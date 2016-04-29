@@ -1,8 +1,8 @@
 {
   "name": "asciidoc-image-helper",
   "main": "./lib/main",
-  "version": "1.0.0",
-  "description": "When paste image to asciidoc ,this will make a directory name \"images\" and will paste the image as a png file in this location, then will insert a relative image url",
+  "version": "0.0.0",
+  "description": "When pasting an image into an asciidoc document, this will make a directory named \"images\" and then will save the image as a png file in this location, then it will insert a relative image url in an asciidoc image reference at the current cursor position.",
   "keywords": [
     "asciidoc",
     "image",
