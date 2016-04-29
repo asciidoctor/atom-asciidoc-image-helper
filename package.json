@@ -1,7 +1,7 @@
 {
   "name": "asciidoc-image-helper",
   "main": "./lib/main",
-  "version": "0.0.0",
+  "version": "0.1.1",
   "description": "When pasting an image into an asciidoc document, this will make a directory named \"images\" and then will save the image as a png file in this location, then it will insert a relative image url in an asciidoc image reference at the current cursor position.",
   "keywords": [
     "asciidoc",
@@ -11,6 +11,9 @@
     "copy"
   ],
   "repository": "https://github.com/bwklein/asciidoc-image-helper",
+  "dependencies": {
+    "language-asciidoc": ">=1.0.0"
+  },
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
