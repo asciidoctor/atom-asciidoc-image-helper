@@ -11,9 +11,6 @@
     "copy"
   ],
   "repository": "https://github.com/bwklein/asciidoc-image-helper",
-  "dependencies": {
-    "language-asciidoc": ">=1.0.0"
-  },
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
