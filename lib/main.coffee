@@ -2,6 +2,17 @@
 {CompositeDisposable,File,Directory} = require 'atom'
 
 module.exports = AsciidocImgHelper =
+	# Configuration Schema
+	config:
+		#customFilenames:
+		#	type: 'boolean'
+		#	default: false
+		#	description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
+		imagesFolder:
+			type: 'string'
+			default: 'images'
+			description: 'The folder name that image files should be pasted into. The default is an "images" folder in the same folder as the asciidoc file. For subfolders, enter something like "assets/images" without the leading or trailing foreward slash.'
+
 
 	activate: (state) ->
 		atom.commands.onWillDispatch (e)  =>
@@ -13,7 +24,6 @@ module.exports = AsciidocImgHelper =
 				return unless grammar
 				return unless grammar.scopeName is 'source.asciidoc'
 
-
 				clipboard = require 'clipboard'
 				img = clipboard.readImage()
 
@@ -24,12 +34,14 @@ module.exports = AsciidocImgHelper =
 				imgbuffer = img.toPng()
 
 				thefile = new File(editor.getPath())
-				assetsDirPath = thefile.getParent().getPath()+"/images"
+				assetsDirPath = thefile.getParent().getPath()+"/"+atom.config.get('AsciidocImgHelper.imagesFolder')
 
 
 				crypto = require "crypto"
 				md5 = crypto.createHash 'md5'
 				md5.update(imgbuffer)
+				# Prompt for custom filename.
+
 
 				filename = "#{thefile.getBaseName().replace(/\.\w+$/, '').replace(/\s+/g,'')}-#{md5.digest('hex').slice(0,5)}.png"
 
@@ -49,7 +61,7 @@ module.exports = AsciidocImgHelper =
 			if not existed
 				assetsDir.create().then (created) =>
 					if created
-						console.log 'Success Create dir'
+						console.log 'Success Create Folder'
 						callback()
 			else
 				callback()
@@ -57,7 +69,7 @@ module.exports = AsciidocImgHelper =
 	writePng: (assetsDir, filename, buffer, callback)->
 		fs = require('fs')
 		fs.writeFile assetsDir+filename, buffer, 'binary',() =>
-			console.log('finish clip image')
+			console.log('Saved Clipboard Image')
 			callback()
 
 	insertUrl: (url,editor) ->
