@@ -34,7 +34,7 @@ module.exports = AsciidocImgHelper =
 				imgbuffer = img.toPng()
 
 				thefile = new File(editor.getPath())
-				assetsDirPath = thefile.getParent().getPath()+"/"+atom.config.get('AsciidocImgHelper.imagesFolder')
+				assetsDirPath = thefile.getParent().getPath()+"/"+atom.config.get('asciidoc-image-helper.imagesFolder')
 
 
 				crypto = require "crypto"
