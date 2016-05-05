@@ -1,82 +1,77 @@
+{CompositeDisposable, File, Directory} = require 'atom'
+path = require 'path'
+fs = require 'fs'
+clipboard = require 'clipboard'
+crypto = require 'crypto'
 
-{CompositeDisposable,File,Directory} = require 'atom'
+module.exports =
 
-module.exports = AsciidocImgHelper =
-	# Configuration Schema
-	config:
-		#customFilenames:
-		#	type: 'boolean'
-		#	default: false
-		#	description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
-		imagesFolder:
-			type: 'string'
-			default: 'images'
-			description: 'The folder name that image files should be pasted into. The default is an "images" folder in the same folder as the asciidoc file. For subfolders, enter something like "assets/images" without the leading or trailing foreward slash.'
+  # Configuration Schema
+  config:
+    # customFilenames:
+    #   type: 'boolean'
+    #   default: false
+    #   description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
+    imagesFolder:
+      type: 'string'
+      default: 'images'
+      description: 'The folder name that image files should be pasted into. The default is an "images" folder in the same folder as the asciidoc file. For subfolders, enter something like "assets/images" without the leading or trailing foreward slash.'
 
+  subscriptions: null
 
-	activate: (state) ->
-		atom.commands.onWillDispatch (e)  =>
-			if e.type is "core:paste"
+  activate: (state) ->
+    @subscriptions = new CompositeDisposable()
 
-				editor = atom.workspace.getActiveTextEditor()
-				return unless editor
-				grammar = editor.getGrammar()
-				return unless grammar
-				return unless grammar.scopeName is 'source.asciidoc'
+    @subscriptions.add atom.commands.onWillDispatch (event) =>
+      if event.type is "core:paste"
 
-				clipboard = require 'clipboard'
-				img = clipboard.readImage()
+        activeEditor = atom.workspace.getActiveTextEditor()
+        return unless activeEditor
+        grammar = activeEditor.getGrammar()
+        return unless grammar and grammar.scopeName is 'source.asciidoc'
 
-				return if img.isEmpty()
+        clipboardContent = clipboard.readImage()
 
-				e.stopImmediatePropagation()
+        return if clipboardContent.isEmpty()
 
-				imgbuffer = img.toPng()
+        event.stopImmediatePropagation()
 
-				thefile = new File(editor.getPath())
-				assetsDirPath = thefile.getParent().getPath()+"/"+atom.config.get('asciidoc-image-helper.imagesFolder')
+        imgbuffer = clipboardContent.toPng()
 
+        md5 = crypto.createHash 'md5'
+        md5.update imgbuffer
+        imageFileNameHash = md5.digest('hex').slice(0, 5)
 
-				crypto = require "crypto"
-				md5 = crypto.createHash 'md5'
-				md5.update(imgbuffer)
-				# Prompt for custom filename.
+        # Prompt for custom filename.
 
+        currentFile = new File activeEditor.getPath()
+        baseImageFileName = currentFile.getBaseName().replace(/\.\w+$/, '').replace(/\s+/g, '')
+        imageFileName = "#{baseImageFileName}-#{imageFileNameHash}.png"
 
-				filename = "#{thefile.getBaseName().replace(/\.\w+$/, '').replace(/\s+/g,'')}-#{md5.digest('hex').slice(0,5)}.png"
+        imagesDirectoryPath = path.join currentFile.getParent().getPath(), atom.config.get 'asciidoc-image-helper.imagesFolder'
 
-				@createDirectory assetsDirPath, ()=>
-					@writePng assetsDirPath+'/', filename, imgbuffer, ()=>
-						# ascClip = "assets/#{filename}"
-						# clipboard.writeText(ascClip)
+        @createDirectory imagesDirectoryPath
+          .then =>
+            @writePng path.join(imagesDirectoryPath, imageFileName), imgbuffer
+          .then ->
+            activeEditor.insertText "image::#{imageFileName}[]", activeEditor
 
-						@insertUrl "image::#{filename}[]",editor
+        false
 
-				return false
+  createDirectory: (dirPath) ->
+    imagesDirectory = new Directory dirPath
+    imagesDirectory.exists()
+      .then (existed) ->
+        if not existed
+          imagesDirectory.create()
 
-	createDirectory: (dirPath, callback)->
-		assetsDir = new Directory(dirPath)
+  writePng: (imagePath, buffer) ->
+    new Promise (resolve, reject) ->
+      fs.writeFile imagePath, buffer, 'binary', (error) ->
+        console.log 'Saved Clipboard Image'
+        if error? then reject error else resolve 'Saved'
 
-		assetsDir.exists().then (existed) =>
-			if not existed
-				assetsDir.create().then (created) =>
-					if created
-						console.log 'Success Create Folder'
-						callback()
-			else
-				callback()
+  deactivate: ->
+    @subscriptions?.dispose()
 
-	writePng: (assetsDir, filename, buffer, callback)->
-		fs = require('fs')
-		fs.writeFile assetsDir+filename, buffer, 'binary',() =>
-			console.log('Saved Clipboard Image')
-			callback()
-
-	insertUrl: (url,editor) ->
-		editor.insertText(url)
-
-
-	deactivate: ->
-
-
-	serialize: ->
+  serialize: ->
