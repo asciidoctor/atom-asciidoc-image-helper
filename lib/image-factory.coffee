@@ -14,10 +14,10 @@ module.exports =
 
     @createDirectory currentDirectory, imagesFolder
       .then (imagesDirectoryPath) =>
-        destinationFilePath = path.join imagesDirectoryPath, imageFileName
+        destinationFilePath = path.join imagesDirectoryPath, imageFileName.replace(/\s+/g,'_')
         @copyFile clipboardText, destinationFilePath
       .then ->
-        activeEditor.insertText "image::#{imageFileName}[]", activeEditor
+        activeEditor.insertText "image::#{imageFileName.replace(/\s+/g,'_')}[]", activeEditor
 
   # Create an image from an image in the clipboard (ex: screenshot)
   #
@@ -31,9 +31,9 @@ module.exports =
 
     @createDirectory currentFile.getParent().getPath(), imagesFolder
       .then (imagesDirectoryPath) =>
-        @writeImage path.join(imagesDirectoryPath, imageFileName) , imgbuffer
+        @writeImage path.join(imagesDirectoryPath, imageFileName.replace(/\s+/g,'_')) , imgbuffer
       .then ->
-        activeEditor.insertText "image::#{imageFileName}[]", activeEditor
+        activeEditor.insertText "image::#{imageFileName.replace(/\s+/g,'_')}[]", activeEditor
 
   copyFile: (sourcePath, targetPath) ->
     new Promise (resolve, reject) ->
