@@ -66,7 +66,7 @@ describe 'Image factory', ->
         imageFactory.writeImage(imagePath, buffer).catch (r) -> error = r
 
       runs ->
-        expect(error.errno).toBe -21
+        expect(error.errno).toBeLessThan 0
         expect(error.code).toBe 'EISDIR'
         expect(error.syscall).toBe 'open'
 
