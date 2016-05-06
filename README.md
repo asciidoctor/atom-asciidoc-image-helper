@@ -26,3 +26,7 @@ Or
 ```bash
 apm install asciidoc-image-helper
 ```
+
+## Credits
+
+Special thank you to [Ludovic Fernandez _ldez_](https://github.com/ldez) for turning this package into a legit project.  I am learning alot from his pull requests.
