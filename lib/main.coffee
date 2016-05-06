@@ -52,7 +52,8 @@ module.exports =
       .then (imagesDirectoryPath) ->
         imageFactory.writeImage path.join(imagesDirectoryPath, imageFileName) , imgbuffer
       .then ->
-        activeEditor.insertText "image::#{imageFileName}[]", activeEditor
+        imagePath = path.join imagesFolder, imageFileName
+        activeEditor.insertText "image::#{imagePath}[]", activeEditor
 
   deactivate: ->
     @subscriptions?.dispose()
