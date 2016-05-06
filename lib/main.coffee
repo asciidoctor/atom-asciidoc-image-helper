@@ -17,6 +17,16 @@ module.exports =
       type: 'string'
       default: 'images'
       order: 1
+    appendImagesFolder:
+      title: 'Append `imagesFolder` in generated links'
+      description: '''
+        image::images/foo-bdb66.png[] # `true`
+
+        image::foo-bdb66.png[] # `false`
+        '''
+      type: 'boolean'
+      default: true
+      order: 2
     enableUrlSupport:
       description: '''
         Enabled clipboard tracking for image URL.
@@ -26,7 +36,7 @@ module.exports =
         '''
       type: 'boolean'
       default: false
-      order: 2
+      order: 3
     imageExtensions:
       description: '''
         Related to clipboard tracking for file URL.
@@ -37,7 +47,7 @@ module.exports =
       default: ['.png', '.jpg', '.jpeg', '.bmp']
       items:
         type: 'string'
-      order: 3
+      order: 4
     # customFilenames:
     #   description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
     #   type: 'boolean'
@@ -62,7 +72,7 @@ module.exports =
           imageFactory.createImage activeEditor, clipboard
           false
         else if atom.config.get 'asciidoc-image-helper.enableUrlSupport'
-          clipboardText = clipboard.readText().split("file:///").join("").replace /^\"|\"$/g, ""
+          clipboardText = clipboard.readText().split('file:///').join('').replace /^\"|\"$/g, ''
 
           if @isImageUrl clipboardText
             event.stopImmediatePropagation()

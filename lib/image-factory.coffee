@@ -10,14 +10,14 @@ module.exports =
   copyImage: (activeEditor, clipboardText) ->
     imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
     currentDirectory = new File(activeEditor.getPath()).getParent().getPath()
-    imageFileName = path.basename clipboardText
+    imageFileName = @cleanImageFilename path.basename clipboardText
 
     @createDirectory currentDirectory, imagesFolder
       .then (imagesDirectoryPath) =>
-        destinationFilePath = path.join imagesDirectoryPath, imageFileName.replace(/\s+/g,'_')
+        destinationFilePath = path.join imagesDirectoryPath, imageFileName
         @copyFile clipboardText, destinationFilePath
-      .then ->
-        activeEditor.insertText "image::#{imageFileName.replace(/\s+/g,'_')}[]", activeEditor
+      .then =>
+        @insertImage activeEditor, imagesFolder, imageFileName
 
   # Create an image from an image in the clipboard (ex: screenshot)
   #
@@ -31,9 +31,9 @@ module.exports =
 
     @createDirectory currentFile.getParent().getPath(), imagesFolder
       .then (imagesDirectoryPath) =>
-        @writeImage path.join(imagesDirectoryPath, imageFileName.replace(/\s+/g,'_')) , imgbuffer
-      .then ->
-        activeEditor.insertText "image::#{imageFileName.replace(/\s+/g,'_')}[]", activeEditor
+        @writeImage path.join(imagesDirectoryPath, imageFileName) , imgbuffer
+      .then =>
+        @insertImage activeEditor, imagesFolder, imageFileName
 
   copyFile: (sourcePath, targetPath) ->
     new Promise (resolve, reject) ->
@@ -63,5 +63,13 @@ module.exports =
     md5.update imgbuffer
     imageFileNameHash = md5.digest('hex').slice(0, 5)
 
-    baseImageFileName = currentFileName.replace(/\.\w+$/, '').replace(/\s+/g, '')
+    baseImageFileName = @cleanImageFilename path.basename currentFileName, path.extname(currentFileName)
     imageFileName = "#{baseImageFileName}-#{imageFileNameHash}.png"
+
+  insertImage: (activeEditor, imagesFolder, imageFileName) ->
+    appendImagesFolder = atom.config.get 'asciidoc-image-helper.appendImagesFolder'
+    imagePath = if appendImagesFolder then path.join imagesFolder, imageFileName else imageFileName
+    activeEditor.insertText "image::#{imagePath}[]", activeEditor
+
+  cleanImageFilename: (imageFileName) ->
+    imageFileName.replace(/\s+/g, '_')
