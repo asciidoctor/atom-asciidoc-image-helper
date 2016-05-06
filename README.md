@@ -2,8 +2,8 @@
 
 [![Atom Package](https://img.shields.io/apm/v/asciidoc-image-helper.svg)](https://atom.io/packages/asciidoc-image-helper)
 [![Atom Package Downloads](https://img.shields.io/apm/dm/asciidoc-image-helper.svg)](https://atom.io/packages/asciidoc-image-helper)
-[![Build Status](https://travis-ci.org/bwklein/atom-asciidoc-image-helper.svg?branch=master)](https://travis-ci.org/bwklein/atom-asciidoc-image-helper)
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/bwklein/atom-asciidoc-image-helper/blob/master/LICENSE.md)
+[![Build Status](https://travis-ci.org/bwklein/asciidoc-image-helper.svg?branch=master)](https://travis-ci.org/bwklein/asciidoc-image-helper)
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/bwklein/asciidoc-image-helper/blob/master/LICENSE.md)
 
 An Atom plugin for AsciiDoc grammar.
 Create image file relative to the asciidoc file and insert a relative url to that file.
