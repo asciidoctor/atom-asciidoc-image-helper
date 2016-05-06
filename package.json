@@ -1,7 +1,7 @@
 {
   "name": "asciidoc-image-helper",
   "main": "./lib/main",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "When pasting an image into an asciidoc document, this package will paste clipboard image data as a file into a folder specified by the user. It will then insert the image url within an asciidoc image reference at the current cursor position.",
   "keywords": [
     "asciidoc",
