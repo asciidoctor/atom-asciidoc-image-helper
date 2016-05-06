@@ -37,9 +37,9 @@ module.exports =
         imagePath = path.join imagesFolder, imageFileName
         activeEditor.insertText "image::#{imagePath}[]", activeEditor
 
-  copyFile: (sourcePah, targetPath) ->
+  copyFile: (sourcePath, targetPath) ->
     new Promise (resolve, reject) ->
-      fs.readFile sourcePah, (error, content) ->
+      fs.readFile sourcePath, (error, content) ->
         if error? then reject error
         fs.writeFile targetPath, content, (error) ->
           if error? then reject error

@@ -62,7 +62,7 @@ module.exports =
           imageFactory.createImage activeEditor, clipboard
           false
         else if atom.config.get 'asciidoc-image-helper.enableUrlSupport'
-          clipboardText = clipboard.readText()
+          clipboardText = clipboard.readText().split("file:///").join("").replace /^\"|\"$/g, ""
 
           if @isImageUrl clipboardText
             event.stopImmediatePropagation()
