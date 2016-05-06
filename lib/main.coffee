@@ -8,13 +8,40 @@ module.exports =
   # Configuration Schema
   config:
     # customFilenames:
+    #   description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
     #   type: 'boolean'
     #   default: false
-    #   description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
     imagesFolder:
+      description: '''
+        The folder name that image files should be pasted into.
+
+        The default is an `images` folder in the same folder as the asciidoc file.
+        For subfolders, enter something like `assets/images` without the leading or trailing foreward slash.
+        '''
       type: 'string'
       default: 'images'
-      description: 'The folder name that image files should be pasted into. The default is an "images" folder in the same folder as the asciidoc file. For subfolders, enter something like "assets/images" without the leading or trailing foreward slash.'
+      order: 1
+    enableUrlSupport:
+      description: '''
+        Enabled clipboard tracking for image URL.
+
+        Use with caution: any valid paths contains in the clipboard will be converted to links.
+        Support: png,
+        '''
+      type: 'boolean'
+      default: false
+      order: 2
+    imageExtensions:
+      description: '''
+        Related to clipboard tracking for file URL.
+
+        Specify image file extensions to be converted to links.
+        '''
+      type: 'array'
+      default: ['.png', '.jpg', '.jpeg', '.bmp']
+      items:
+        type: 'string'
+      order: 3
 
   subscriptions: null
 
@@ -30,29 +57,24 @@ module.exports =
         grammar = activeEditor.getGrammar()
         return unless grammar and grammar.scopeName is 'source.asciidoc'
 
-        clipboardContent = clipboard.readImage()
-        return if clipboardContent.isEmpty()
+        if @isImage clipboard
+          event.stopImmediatePropagation()
+          imageFactory.createImage activeEditor, clipboard
+          false
+        else if atom.config.get 'asciidoc-image-helper.enableUrlSupport'
+          clipboardText = clipboard.readText()
 
-        event.stopImmediatePropagation()
+          if @isImageUrl clipboardText
+            event.stopImmediatePropagation()
+            imageFactory.copyImage activeEditor, clipboardText
+            false
 
-        currentFile = new File activeEditor.getPath()
+  isImage: (clipboard) ->
+    not clipboard.readImage().isEmpty()
 
-        @createImage(activeEditor, currentFile, clipboardContent)
-
-        false
-
-  createImage: (activeEditor, currentFile, clipboardContent) ->
-    imgbuffer = clipboardContent.toPng()
-
-    imageFileName = imageFactory.createImageName currentFile.getBaseName(), imgbuffer
-
-    imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
-
-    imageFactory.createDirectory currentFile.getParent().getPath(), imagesFolder
-      .then (imagesDirectoryPath) ->
-        imageFactory.writeImage path.join(imagesDirectoryPath, imageFileName) , imgbuffer
-      .then ->
-        activeEditor.insertText "image::#{imageFileName}[]", activeEditor
+  isImageUrl: (clipboardText) ->
+    imageExtensions = atom.config.get 'asciidoc-image-helper.imageExtensions'
+    clipboardText?.length? and path.extname(clipboardText) in imageExtensions and new File(clipboardText).existsSync()
 
   deactivate: ->
     @subscriptions?.dispose()
