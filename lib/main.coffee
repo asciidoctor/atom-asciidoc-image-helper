@@ -1,8 +1,7 @@
-{CompositeDisposable, File, Directory} = require 'atom'
-path = require 'path'
-fs = require 'fs'
+{CompositeDisposable, File} = require 'atom'
 clipboard = require 'clipboard'
-crypto = require 'crypto'
+path = require 'path'
+imageFactory = require './image-factory'
 
 module.exports =
 
@@ -27,49 +26,33 @@ module.exports =
 
         activeEditor = atom.workspace.getActiveTextEditor()
         return unless activeEditor
+
         grammar = activeEditor.getGrammar()
         return unless grammar and grammar.scopeName is 'source.asciidoc'
 
         clipboardContent = clipboard.readImage()
-
         return if clipboardContent.isEmpty()
 
         event.stopImmediatePropagation()
 
-        imgbuffer = clipboardContent.toPng()
-
-        md5 = crypto.createHash 'md5'
-        md5.update imgbuffer
-        imageFileNameHash = md5.digest('hex').slice(0, 5)
-
-        # Prompt for custom filename.
-
         currentFile = new File activeEditor.getPath()
-        baseImageFileName = currentFile.getBaseName().replace(/\.\w+$/, '').replace(/\s+/g, '')
-        imageFileName = "#{baseImageFileName}-#{imageFileNameHash}.png"
 
-        imagesDirectoryPath = path.join currentFile.getParent().getPath(), atom.config.get 'asciidoc-image-helper.imagesFolder'
-
-        @createDirectory imagesDirectoryPath
-          .then =>
-            @writePng path.join(imagesDirectoryPath, imageFileName), imgbuffer
-          .then ->
-            activeEditor.insertText "image::#{imageFileName}[]", activeEditor
+        @createImage(activeEditor, currentFile, clipboardContent)
 
         false
 
-  createDirectory: (dirPath) ->
-    imagesDirectory = new Directory dirPath
-    imagesDirectory.exists()
-      .then (existed) ->
-        if not existed
-          imagesDirectory.create()
+  createImage: (activeEditor, currentFile, clipboardContent) ->
+    imgbuffer = clipboardContent.toPng()
 
-  writePng: (imagePath, buffer) ->
-    new Promise (resolve, reject) ->
-      fs.writeFile imagePath, buffer, 'binary', (error) ->
-        console.log 'Saved Clipboard Image'
-        if error? then reject error else resolve 'Saved'
+    imageFileName = imageFactory.createImageName currentFile.getBaseName(), imgbuffer
+
+    imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
+
+    imageFactory.createDirectory currentFile.getParent().getPath(), imagesFolder
+      .then (imagesDirectoryPath) ->
+        imageFactory.writeImage path.join(imagesDirectoryPath, imageFileName) , imgbuffer
+      .then ->
+        activeEditor.insertText "image::#{imageFileName}[]", activeEditor
 
   deactivate: ->
     @subscriptions?.dispose()
