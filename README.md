@@ -3,6 +3,7 @@
 [![Atom Package](https://img.shields.io/apm/v/asciidoc-image-helper.svg)](https://atom.io/packages/asciidoc-image-helper)
 [![Atom Package Downloads](https://img.shields.io/apm/dm/asciidoc-image-helper.svg)](https://atom.io/packages/asciidoc-image-helper)
 [![Build Status](https://travis-ci.org/bwklein/asciidoc-image-helper.svg?branch=master)](https://travis-ci.org/bwklein/asciidoc-image-helper)
+[![Build status](https://ci.appveyor.com/api/projects/status/ma3a96lhu12iig1v/branch/master?svg=true)](https://ci.appveyor.com/project/bwklein/asciidoc-image-helper/branch/master)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/bwklein/asciidoc-image-helper/blob/master/LICENSE.md)
 
 An Atom plugin for AsciiDoc grammar.
