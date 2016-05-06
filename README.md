@@ -16,9 +16,15 @@ Originally forked from [markdown-image-helper](https://github.com/bigyuki/markdo
 2. Paste it into Atom AsciiDoc editor.
 3. See that the 'Images Folder' has a new png file, and an image reference was inserted into the editor with the correct filename.
 
-**Note:** You should set the `:imagesdir:` parameter for your document to match the 'Images Folder' setting in this package.
-This way the package will know where to place your image files.
-The default setting is a folder named 'images' in the same folder as the document.
+The default setting is to place copied and created a folder named `images` in the same folder as the document.  
+Another default setting is to expect that the `:imagesdir:` attribute is **not** set in the document (or through cli) and sets the 'Append Images Folder' setting to `true`. This setting will append the Images Folder path to the filename in the `image:[]` macro so that asciidoctor knows where to find the files.
+
+**NOTE:** To increase flexibility for moving your images folder, and to also reduce the repetition of hard coded image folder strings in the document; it is recommended to set the `:imagesdir:` attribute for your document to match the 'Images Folder' setting in this package and to disable the 'Append Images Folder' option.
+This way, the package will know where to place your image files, and asciidoctor will know where to find them.
+
+If you want to move your folder of images into a new directory called something like 'assets' you would change the Folder Location string to `assets/images`, and set this same thing as the value of the `:imagesdir:` attribute in the document.
+Make sure the setting to 'Append Images Folder' is not checked.
+Now everything should just work as expected in the new location, without requiring a Find/Replace operation over all of the documents that have hard coded the images folder into the image macros.
 
 ### Notes for Windows Users
 

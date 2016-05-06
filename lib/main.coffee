@@ -18,11 +18,11 @@ module.exports =
       default: 'images'
       order: 1
     appendImagesFolder:
-      title: 'Append `imagesFolder` in generated links'
+      title: 'Append `imagesFolder` in generated links.'
       description: '''
-        image::images/foo-bdb66.png[] # `true`
+        image::images/foo-bdb66.png[] # `true` (default)
 
-        image::foo-bdb66.png[] # `false`
+        image::foo-bdb66.png[] # `false` (You are using the :imagesdir: attribute in your document.)
         '''
       type: 'boolean'
       default: true
