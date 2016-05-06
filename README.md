@@ -6,16 +6,15 @@
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/bwklein/asciidoc-image-helper/blob/master/LICENSE.md)
 
 An Atom plugin for AsciiDoc grammar.
-Create image file relative to the asciidoc file and insert a relative url to that file.
+Create an image file in the specified folder that is named after the asciidoc file it is pasted into, and insert a relative url to that file into the document.
 
-Conversion of [markdown-image-helper](https://github.com/bigyuki/markdown-image-helper)，instead uploading the image, copying to the filesystem into a relative path is better.
+Originally forked from [markdown-image-helper](https://github.com/bigyuki/markdown-image-helper).
 
 ## Usage
 
 1. Take a screenshot or copy any image to the clipboard.
 2. Paste it into Atom AsciiDoc editor.
 3. See that an directory name `images` was created, the directory has a png file, and a url was inserted.
-
 
 ## Install
 
@@ -29,4 +28,4 @@ apm install asciidoc-image-helper
 
 ## Credits
 
-Special thank you to [Ludovic Fernandez _ldez_](https://github.com/ldez) for turning this package into a legit project.  I am learning alot from his pull requests.
+Special thank you to [Ludovic Fernandez '_ldez_'](https://github.com/ldez) for turning this package into a legit project.  I am learning alot from his pull requests.
