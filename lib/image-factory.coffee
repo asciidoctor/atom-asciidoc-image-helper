@@ -17,8 +17,7 @@ module.exports =
         destinationFilePath = path.join imagesDirectoryPath, imageFileName
         @copyFile clipboardText, destinationFilePath
       .then ->
-        imagePath = path.join imagesFolder, imageFileName
-        activeEditor.insertText "image::#{imagePath}[]", activeEditor
+        activeEditor.insertText "image::#{imageFileName}[]", activeEditor
 
   # Create an image from an image in the clipboard (ex: screenshot)
   #
@@ -34,8 +33,7 @@ module.exports =
       .then (imagesDirectoryPath) =>
         @writeImage path.join(imagesDirectoryPath, imageFileName) , imgbuffer
       .then ->
-        imagePath = path.join imagesFolder, imageFileName
-        activeEditor.insertText "image::#{imagePath}[]", activeEditor
+        activeEditor.insertText "image::#{imageFileName}[]", activeEditor
 
   copyFile: (sourcePath, targetPath) ->
     new Promise (resolve, reject) ->
