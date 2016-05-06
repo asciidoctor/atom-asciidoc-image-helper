@@ -7,10 +7,6 @@ module.exports =
 
   # Configuration Schema
   config:
-    # customFilenames:
-    #   description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
-    #   type: 'boolean'
-    #   default: false
     imagesFolder:
       description: '''
         The folder name that image files should be pasted into.
@@ -42,6 +38,10 @@ module.exports =
       items:
         type: 'string'
       order: 3
+    # customFilenames:
+    #   description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
+    #   type: 'boolean'
+    #   default: false
 
   subscriptions: null
 
