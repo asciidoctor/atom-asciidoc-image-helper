@@ -22,7 +22,7 @@ module.exports =
       description: '''
         image::images/foo-bdb66.png[] # `true` (default)
 
-        image::foo-bdb66.png[] # `false` (You are using the :imagesdir: attribute in your document.)
+        image::foo-bdb66.png[] # `false` (You are using the `:imagesdir:` attribute in your document.)
         '''
       type: 'boolean'
       default: true
@@ -32,7 +32,7 @@ module.exports =
         Enabled clipboard tracking for image URL.
 
         Use with caution: any valid paths contains in the clipboard will be converted to links.
-        Support: png,
+        Support: png.
         '''
       type: 'boolean'
       default: false

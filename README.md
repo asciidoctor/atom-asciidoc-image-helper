@@ -6,7 +6,8 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/ma3a96lhu12iig1v/branch/master?svg=true)](https://ci.appveyor.com/project/bwklein/asciidoc-image-helper/branch/master)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/bwklein/asciidoc-image-helper/blob/master/LICENSE.md)
 
-An Atom plugin for AsciiDoc grammar.
+An Atom plugin to facilitate insertion of images in an AsciiDoc document.
+
 Create an image file, in the specified folder, that is named after the AsciiDoc file it is pasted into, and insert an image reference to that file into the editor.
 
 Originally forked from [markdown-image-helper](https://github.com/bigyuki/markdown-image-helper).
@@ -15,24 +16,24 @@ Originally forked from [markdown-image-helper](https://github.com/bigyuki/markdo
 
 1. Take a screenshot or copy an image to the clipboard.
 2. Paste it into Atom AsciiDoc editor.
-3. See that the 'Images Folder' has a new png file, and an image reference was inserted into the editor with the correct filename.
+3. See that the _'Images Folder'_ has a new png file, and an image reference was inserted into the editor with the correct filename.
 
 The default setting is to place copied and created a folder named `images` in the same folder as the document.  
-Another default setting is to expect that the `:imagesdir:` attribute is **not** set in the document (or through cli) and sets the 'Append Images Folder' setting to `true`. This setting will append the Images Folder path to the filename in the `image:[]` macro so that asciidoctor knows where to find the files.
+Another default setting is to expect that the `:imagesdir:` attribute is **not** set in the document (or through cli) and sets the _'Append Images Folder'_ setting to `true`. This setting will append the Images Folder path to the filename in the `image:[]` macro so that AsciiDoctor knows where to find the files.
 
-**NOTE:** To increase flexibility for moving your images folder, and to also reduce the repetition of hard coded image folder strings in the document; it is recommended to set the `:imagesdir:` attribute for your document to match the 'Images Folder' setting in this package and to disable the 'Append Images Folder' option.
+**NOTE:** To increase flexibility for moving your images folder, and to also reduce the repetition of hard coded image folder strings in the document; it is recommended to set the `:imagesdir:` attribute for your document to match the _'Images Folder'_ setting in this package and to disable the _'Append Images Folder'_ option.  
 This way, the package will know where to place your image files, and asciidoctor will know where to find them.
 
-If you want to move your folder of images into a new directory called something like 'assets' you would change the Folder Location string to `assets/images`, and set this same thing as the value of the `:imagesdir:` attribute in the document.
-Make sure the setting to 'Append Images Folder' is not checked.
+If you want to move your folder of images into a new directory called something like `assets` you would change the Folder Location string to `assets/images`, and set this same thing as the value of the `:imagesdir:` attribute in the document.  
+Make sure the setting to _'Append Images Folder_' is not checked.  
 Now everything should just work as expected in the new location, without requiring a Find/Replace operation over all of the documents that have hard coded the images folder into the image macros.
 
 ### Notes for Windows Users
 
 #### To take a screenshot to the clipboard.
 
-Use PrintScr to capture your entire desktop.  
-Use Alt + PrintScr to capture the active window.  
+Use `PrintScr` to capture your entire desktop.  
+Use `Alt + PrintScr` to capture the active window.  
 
 #### When copying an existing file on your local system into the document.
 
@@ -51,8 +52,8 @@ Use `Command-Shift-Control-4` to capture the image data to the clipboard.
 #### When copying an existing file on your local system into the document.
 
 1. Navigate to the file or folder you wish to copy the path for.
-2. `Right-click` (or `Control+Click`, or a Two-Finger click on trackpads) on the file in the Mac Finder.
-3. While in the right-click menu, hold down the OPTION key to reveal the "Copy (item name) as Pathname" option, it replaces the standard Copy option.
+2. `Right-click` (or `Control+Click`, or a _Two-Finger click_ on trackpads) on the file in the Mac Finder.
+3. While in the right-click menu, hold down the OPTION key to reveal the _"Copy (item name) as Pathname"_ option, it replaces the standard Copy option.
 4. Once selected, the file or folders path is now in the clipboard, ready to be pasted into the document.  
 **Note:** The copied pathname is always the complete path, it’s not relative.
 
