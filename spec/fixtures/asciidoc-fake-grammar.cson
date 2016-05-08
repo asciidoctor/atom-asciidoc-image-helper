@@ -1,0 +1,9 @@
+name: 'AsciiDoc'
+scopeName: 'source.asciidoc'
+fileTypes: [
+  'ad'
+  'asc'
+  'adoc'
+  'asciidoc'
+  'adoc.txt'
+]

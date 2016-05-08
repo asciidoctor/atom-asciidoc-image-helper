@@ -3,7 +3,7 @@ fs = require 'fs'
 path = require 'path'
 crypto = require 'crypto'
 
-module.exports =
+class ImageFactory
 
   # Copy image from an URL in the clipboard
   #
@@ -31,7 +31,7 @@ module.exports =
 
     @createDirectory currentFile.getParent().getPath(), imagesFolder
       .then (imagesDirectoryPath) =>
-        @writeImage path.join(imagesDirectoryPath, imageFileName) , imgbuffer
+        @writeImage path.join(imagesDirectoryPath, imageFileName), imgbuffer
       .then =>
         @insertImage activeEditor, imagesFolder, imageFileName
 
@@ -40,22 +40,16 @@ module.exports =
       fs.readFile sourcePath, (error, content) ->
         if error? then reject error
         fs.writeFile targetPath, content, (error) ->
-          if error? then reject error
-          resolve targetPath
+          if error? then reject error else resolve targetPath
 
   createDirectory: (baseDirectory, imagesFolder) ->
     imagesDirectoryPath = path.join baseDirectory, imagesFolder
     imagesDirectory = new Directory imagesDirectoryPath
-
-    imagesDirectory.create()
-      .then (created) ->
-        if created then console.log 'New directory created'
-        imagesDirectoryPath
+    imagesDirectory.create().then (created) -> imagesDirectoryPath
 
   writeImage: (imagePath, buffer) ->
     new Promise (resolve, reject) ->
       fs.writeFile imagePath, buffer, 'binary', (error) ->
-        console.log 'Saved Clipboard Image'
         if error? then reject error else resolve imagePath
 
   createImageName: (currentFileName, imgbuffer) ->
@@ -69,7 +63,11 @@ module.exports =
   insertImage: (activeEditor, imagesFolder, imageFileName) ->
     appendImagesFolder = atom.config.get 'asciidoc-image-helper.appendImagesFolder'
     imagePath = if appendImagesFolder then path.join imagesFolder, imageFileName else imageFileName
-    activeEditor.insertText "image::#{imagePath}[]", activeEditor
+    imageMarkup = "image::#{imagePath}[]"
+    activeEditor.insertText imageMarkup, activeEditor
+    imageMarkup
 
   cleanImageFilename: (imageFileName) ->
     imageFileName.replace(/\s+/g, '_')
+
+module.exports = new ImageFactory

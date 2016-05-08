@@ -1,4 +1,4 @@
-{CompositeDisposable, File} = require 'atom'
+{CompositeDisposable, File, Emitter} = require 'atom'
 clipboard = require 'clipboard'
 path = require 'path'
 imageFactory = require './image-factory'
@@ -54,30 +54,44 @@ module.exports =
     #   default: false
 
   subscriptions: null
+  emitter: null
 
   activate: (state) ->
-    @subscriptions = new CompositeDisposable()
+    @subscriptions = new CompositeDisposable
+    @emitter = new Emitter
+
+    successHandler = (imageMarkup) =>
+      atom.notifications.addSuccess 'Image inserted and stored.', detail: imageMarkup
+      @emitter.emit 'did-image-insert', imageMarkup: imageMarkup
+
+    errorHandler = (error) ->
+      atom.notifications.addError error.toString(), detail: error.stack or '', dismissable: true
+      console.error error
 
     @subscriptions.add atom.commands.onWillDispatch (event) =>
-      if event.type is "core:paste"
-
+      if event.type is 'core:paste'
         activeEditor = atom.workspace.getActiveTextEditor()
         return unless activeEditor
 
         grammar = activeEditor.getGrammar()
         return unless grammar and grammar.scopeName is 'source.asciidoc'
 
+        # Native image support
         if @isImage clipboard
           event.stopImmediatePropagation()
           imageFactory.createImage activeEditor, clipboard
-          false
+            .then successHandler
+            .catch errorHandler
+
+        # Image URL support
         else if atom.config.get 'asciidoc-image-helper.enableUrlSupport'
-          clipboardText = clipboard.readText().split('file:///').join('').replace /^\"|\"$/g, ''
+          clipboardText = clipboard.readText().split(/file:[\/]{2,3}/).join('').replace /^\"|\"$/g, ''
 
           if @isImageUrl clipboardText
             event.stopImmediatePropagation()
             imageFactory.copyImage activeEditor, clipboardText
-            false
+              .then successHandler
+              .catch errorHandler
 
   isImage: (clipboard) ->
     not clipboard.readImage().isEmpty()
@@ -86,7 +100,11 @@ module.exports =
     imageExtensions = atom.config.get 'asciidoc-image-helper.imageExtensions'
     clipboardText?.length? and path.extname(clipboardText) in imageExtensions and new File(clipboardText).existsSync()
 
+  onDidInsert: (callback) ->
+    @emitter.on 'did-image-insert', callback
+
   deactivate: ->
     @subscriptions?.dispose()
+    @emitter?.dispose()
 
   serialize: ->
