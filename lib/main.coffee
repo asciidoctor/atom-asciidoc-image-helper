@@ -44,7 +44,7 @@ module.exports =
         Specify image file extensions to be converted to links.
         '''
       type: 'array'
-      default: ['.png', '.jpg', '.jpeg', '.bmp']
+      default: ['.png', '.jpg', '.jpeg', '.bmp', '.svg', '.gif']
       items:
         type: 'string'
       order: 4
