@@ -2,7 +2,6 @@
 clipboard = require 'clipboard'
 path = require 'path'
 imageFactory = require './image-factory'
-customFilenameView = require './custom-filename-view'
 
 module.exports =
 
@@ -49,10 +48,10 @@ module.exports =
       items:
         type: 'string'
       order: 4
-    customFilenames:
-      description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
-      type: 'boolean'
-      default: false
+    # customFilenames:
+    #   description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
+    #   type: 'boolean'
+    #   default: false
 
   subscriptions: null
   emitter: null
@@ -76,11 +75,6 @@ module.exports =
 
         grammar = activeEditor.getGrammar()
         return unless grammar and grammar.scopeName is 'source.asciidoc'
-
-        if atom.config.get('asciidoc-image-helper.customFilenames')
-          customFileString = customFilenameView.customFilename()
-          console.log customFileString
-        # To-Do: Pass 'customFileString' UserInput to imageFactories below to include in final filename.
 
         # Native image support
         if @isImage clipboard

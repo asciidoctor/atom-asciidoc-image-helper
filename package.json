@@ -15,10 +15,7 @@
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
-  "dependencies": {
-      "atom-space-pen-views": "^2.0.5"
-  },
-    "devDependencies": {
+  "devDependencies": {
     "coffeelint": "^1.15.0",
     "temp": "~0.8.3"
   }
