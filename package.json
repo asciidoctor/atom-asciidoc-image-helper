@@ -10,7 +10,7 @@
     "paste",
     "copy"
   ],
-  "repository": "https://github.com/bwklein/asciidoc-image-helper",
+  "repository": "https://github.com/asciidoctor/atom-asciidoc-image-helper",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
