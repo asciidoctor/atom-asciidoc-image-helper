@@ -1,5 +1,7 @@
 # AsciiDoc Image Helper
 
+[![Join the chat at https://gitter.im/asciidoctor/atom-asciidoc-image-helper](https://badges.gitter.im/asciidoctor/atom-asciidoc-image-helper.svg)](https://gitter.im/asciidoctor/atom-asciidoc-image-helper?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Atom Package](https://img.shields.io/apm/v/asciidoc-image-helper.svg)](https://atom.io/packages/asciidoc-image-helper)
 [![Atom Package Downloads](https://img.shields.io/apm/dm/asciidoc-image-helper.svg)](https://atom.io/packages/asciidoc-image-helper)
 [![Build Status](https://travis-ci.org/asciidoctor/atom-asciidoc-image-helper.svg?branch=master)](https://travis-ci.org/asciidoctor/atom-asciidoc-image-helper)
