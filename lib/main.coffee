@@ -89,8 +89,8 @@ module.exports =
           console.log clipboardText
 
           # windows specific
-          windowsFilePattern = /file:[\/]{2,3}(.*)/
-          windowsPathPattern = /\"(.*)\"/
+          windowsFilePattern = /^file:[\/]{2,3}(.*)/
+          windowsPathPattern = /^\"(.*)\"$/
           if clipboardText.match windowsFilePattern
             clipboardText = windowsFilePattern.exec(clipboardText)[1]
 
