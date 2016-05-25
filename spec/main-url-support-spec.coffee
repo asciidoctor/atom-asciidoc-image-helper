@@ -47,7 +47,7 @@ describe 'URL with AsciiDoc Image helper should', ->
     expect(editor.getSelectedText()).toMatch /^foobar$/
     editor.delete()
 
-    imageUrl = 'file:///' + path.join(__dirname, 'fixtures', imageName) + ''
+    imageUrl = 'file:///' + path.join(__dirname, 'fixtures', imageName)
     clipboard.writeText imageUrl
     atom.commands.dispatch workspaceElement, 'core:paste'
 

@@ -77,7 +77,7 @@ module.exports =
         return unless grammar and grammar.scopeName is 'source.asciidoc'
 
         # Native image support
-        if @isImage clipboard
+        if @isImage()
           event.stopImmediatePropagation()
           imageFactory.createImage activeEditor, clipboard
             .then successHandler
@@ -85,17 +85,7 @@ module.exports =
 
         # Image URL support
         else if atom.config.get 'asciidoc-image-helper.enableUrlSupport'
-          clipboardText = clipboard.readText()
-          console.log clipboardText
-
-          # windows specific
-          windowsFilePattern = /^file:[\/]{2,3}(.*)/
-          windowsPathPattern = /^\"(.*)\"$/
-          if clipboardText.match windowsFilePattern
-            clipboardText = windowsFilePattern.exec(clipboardText)[1]
-
-          if clipboardText.match windowsPathPattern
-            clipboardText = windowsPathPattern.exec(clipboardText)[1]
+          clipboardText = @readClipboardText()
 
           if @isImageUrl clipboardText
             event.stopImmediatePropagation()
@@ -103,12 +93,27 @@ module.exports =
               .then successHandler
               .catch errorHandler
 
-  isImage: (clipboard) ->
+  isImage: ->
     not clipboard.readImage().isEmpty()
 
   isImageUrl: (clipboardText) ->
     imageExtensions = atom.config.get 'asciidoc-image-helper.imageExtensions'
     clipboardText?.length? and path.extname(clipboardText) in imageExtensions and new File(clipboardText).existsSync()
+
+  readClipboardText: ->
+    clipboardText = clipboard.readText()
+
+    # windows specific
+    windowsFilePattern = /^file:[\/]{2,3}(.*)$/
+    if clipboardText.match windowsFilePattern
+      clipboardText = windowsFilePattern.exec(clipboardText)[1]
+
+    # windows specific
+    windowsPathPattern = /^\"(.*)\"$/
+    if clipboardText.match windowsPathPattern
+      clipboardText = windowsPathPattern.exec(clipboardText)[1]
+
+    clipboardText
 
   onDidInsert: (callback) ->
     @emitter.on 'did-image-insert', callback
