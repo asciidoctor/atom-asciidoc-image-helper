@@ -33,7 +33,7 @@ describe 'URL with AsciiDoc Image helper should', ->
     temp.cleanupSync()
 
 
-  it 'create a link and store the image in a directory when image folder append to link and URL in "windows style" and use the default directory', ->
+  it 'create a link and store the image in a directory when image folder append to link and URL in "file" format and use the default directory', ->
     called = false
     asciiDocimageHelper.onDidInsert -> called = true
 
@@ -47,7 +47,36 @@ describe 'URL with AsciiDoc Image helper should', ->
     expect(editor.getSelectedText()).toMatch /^foobar$/
     editor.delete()
 
-    imageUrl = '"file:///' + path.join(__dirname, 'fixtures', imageName) + '"'
+    imageUrl = 'file:///' + path.join(__dirname, 'fixtures', imageName) + ''
+    clipboard.writeText imageUrl
+    atom.commands.dispatch workspaceElement, 'core:paste'
+
+    waitsFor 'markup insertion', -> called
+
+    runs ->
+      editor.selectAll()
+      expect(editor.getSelectedText()).toMatch /image::images(\/|\\)logo-atom\.png\[\]/
+      imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
+      stat = fs.statSync path.join directory, imagesFolder, imageName
+      expect(stat).toBeDefined()
+      expect(stat.size).toBe 6258
+
+
+  it 'create a link and store the image in a directory when image folder append to link and URL in quoted string and use the default directory', ->
+    called = false
+    asciiDocimageHelper.onDidInsert -> called = true
+
+    atom.config.set 'asciidoc-image-helper.appendImagesFolder', true # Default
+    atom.config.set 'asciidoc-image-helper.enableUrlSupport', true
+
+    editor = atom.workspace.getActiveTextEditor()
+    expect(editor.getPath()).toMatch /^.*(\/|\\)foobar\.adoc$/
+
+    editor.selectAll()
+    expect(editor.getSelectedText()).toMatch /^foobar$/
+    editor.delete()
+
+    imageUrl = '"' + path.join(__dirname, 'fixtures', imageName) + '"'
     clipboard.writeText imageUrl
     atom.commands.dispatch workspaceElement, 'core:paste'
 
