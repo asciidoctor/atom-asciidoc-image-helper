@@ -51,7 +51,7 @@ describe 'URL with AsciiDoc Image helper should', ->
     clipboard.writeText imageUrl
     atom.commands.dispatch workspaceElement, 'core:paste'
 
-    waitsFor 'markup insertion', -> called is true
+    waitsFor 'markup insertion', -> called
 
     runs ->
       editor.selectAll()

@@ -85,7 +85,12 @@ module.exports =
 
         # Image URL support
         else if atom.config.get 'asciidoc-image-helper.enableUrlSupport'
-          clipboardText = clipboard.readText().split(/file:[\/]{2,3}/).join('').replace /^\"|\"$/g, ''
+          clipboardText = clipboard.readText()
+
+          # windows specific
+          windowsPattern = /^\"file:[\/]{2,3}(.*)\"$/
+          if clipboardText.match windowsPattern
+            clipboardText = windowsPattern.exec(clipboardText)[1]
 
           if @isImageUrl clipboardText
             event.stopImmediatePropagation()
