@@ -2,6 +2,8 @@
 clipboard = require 'clipboard'
 path = require 'path'
 imageFactory = require './image-factory'
+CustomNameView = require './custom-name-view'
+filenameHelper = require './filename-helper'
 
 module.exports =
 
@@ -17,6 +19,15 @@ module.exports =
       type: 'string'
       default: 'images'
       order: 1
+    dynamicImageFolderName:
+      title: 'Place images in folder that is the same as the filename (without the extension)'
+      description: '''
+        Place images in a folder named after the filename.
+        This will offer a dynamic image folder name, and override the "Images Folder" setting.
+        '''
+      type: 'boolean'
+      default: false
+      order: 2
     appendImagesFolder:
       title: 'Append `imagesFolder` in generated links.'
       description: '''
@@ -26,7 +37,7 @@ module.exports =
         '''
       type: 'boolean'
       default: true
-      order: 2
+      order: 3
     enableUrlSupport:
       description: '''
         Enabled clipboard tracking for image URL.
@@ -36,7 +47,7 @@ module.exports =
         '''
       type: 'boolean'
       default: false
-      order: 3
+      order: 4
     imageExtensions:
       description: '''
         Related to clipboard tracking for file URL.
@@ -47,11 +58,11 @@ module.exports =
       default: ['.png', '.jpg', '.jpeg', '.bmp', '.svg', '.gif']
       items:
         type: 'string'
-      order: 4
-    # customFilenames:
-    #   description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
-    #   type: 'boolean'
-    #   default: false
+      order: 5
+    customFilenames:
+      description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
+      type: 'boolean'
+      default: false
 
   subscriptions: null
   emitter: null
@@ -78,8 +89,7 @@ module.exports =
 
         # Native image support
         if @isImage()
-          event.stopImmediatePropagation()
-          imageFactory.createImage activeEditor, clipboard
+          @pasteNativeImage event, activeEditor
             .then successHandler
             .catch errorHandler
 
@@ -88,17 +98,48 @@ module.exports =
           clipboardText = @readClipboardText()
 
           if @isImageUrl clipboardText
-            event.stopImmediatePropagation()
-            imageFactory.copyImage activeEditor, clipboardText
+            @pasteImageUrl event, activeEditor, clipboardText
               .then successHandler
               .catch errorHandler
+
+  # Native image support
+  pasteNativeImage: (event, activeEditor) ->
+    event.stopImmediatePropagation()
+    imgbuffer = clipboard.readImage().toPng()
+
+    currentFile = new File activeEditor.getPath()
+    imageFileName = filenameHelper.generateImageName path.basename(currentFile.getBaseName()), imgbuffer
+
+    new Promise (resolve, rejet) ->
+      if atom.config.get 'asciidoc-image-helper.customFilenames'
+        dialog = new CustomNameView initialImageName: imageFileName
+        dialog.attach()
+        dialog.onDidConfirm (custom) ->
+          resolve imageFactory.createImage activeEditor, currentFile, imgbuffer, custom.imageName
+      else
+        resolve imageFactory.createImage activeEditor, currentFile, imgbuffer, imageFileName
+
+  # Image URL support
+  pasteImageUrl: (event, activeEditor, clipboardText) ->
+    event.stopImmediatePropagation()
+    imageFileName = filenameHelper.cleanImageFilename path.basename clipboardText
+
+    new Promise (resolve, rejet) ->
+      if atom.config.get 'asciidoc-image-helper.customFilenames'
+        dialog = new CustomNameView initialImageName: imageFileName
+        dialog.attach()
+        dialog.onDidConfirm (custom) ->
+          resolve imageFactory.copyImage activeEditor, clipboardText, custom.imageName
+      else
+        resolve imageFactory.copyImage activeEditor, clipboardText, imageFileName
 
   isImage: ->
     not clipboard.readImage().isEmpty()
 
   isImageUrl: (clipboardText) ->
     imageExtensions = atom.config.get 'asciidoc-image-helper.imageExtensions'
-    clipboardText?.length? and path.extname(clipboardText) in imageExtensions and new File(clipboardText).existsSync()
+    safeImageExtensions = imageExtensions.map (ext) -> ext.toLowerCase()
+    clipboardText?.length? and path.extname(clipboardText)?.toLowerCase() in safeImageExtensions and new File(clipboardText).existsSync()
 
   readClipboardText: ->
     clipboardText = clipboard.readText()

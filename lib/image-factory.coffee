@@ -2,38 +2,35 @@
 fs = require 'fs'
 path = require 'path'
 crypto = require 'crypto'
+filenameHelper = require './filename-helper'
 
 class ImageFactory
 
   # Copy image from an URL in the clipboard
   #
-  copyImage: (activeEditor, clipboardText) ->
-    imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
-    currentDirectory = new File(activeEditor.getPath()).getParent().getPath()
-    imageFileName = @cleanImageFilename path.basename clipboardText
+  copyImage: (activeEditor, srcImagePath, imageFileName) ->
+    currentFile = new File activeEditor.getPath()
 
-    @createDirectory currentDirectory, imagesFolder
+    imagesFolderName = @makeImagesFolderName currentFile
+    currentDirectory = currentFile.getParent().getPath()
+
+    @createDirectory currentDirectory, imagesFolderName
       .then (imagesDirectoryPath) =>
         destinationFilePath = path.join imagesDirectoryPath, imageFileName
-        @copyFile clipboardText, destinationFilePath
+        @copyFile srcImagePath, destinationFilePath
       .then =>
-        @insertImage activeEditor, imagesFolder, imageFileName
+        @insertImage activeEditor, imagesFolderName, imageFileName
 
   # Create an image from an image in the clipboard (ex: screenshot)
   #
-  createImage: (activeEditor, clipboard) ->
-    clipboardContent = clipboard.readImage()
-    imgbuffer = clipboardContent.toPng()
+  createImage: (activeEditor, currentFile, imgbuffer, imageFileName) ->
+    imagesFolderName = @makeImagesFolderName currentFile
 
-    imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
-    currentFile = new File activeEditor.getPath()
-    imageFileName = @createImageName currentFile.getBaseName(), imgbuffer
-
-    @createDirectory currentFile.getParent().getPath(), imagesFolder
+    @createDirectory currentFile.getParent().getPath(), imagesFolderName
       .then (imagesDirectoryPath) =>
         @writeImage path.join(imagesDirectoryPath, imageFileName), imgbuffer
       .then =>
-        @insertImage activeEditor, imagesFolder, imageFileName
+        @insertImage activeEditor, imagesFolderName, imageFileName
 
   copyFile: (sourcePath, targetPath) ->
     new Promise (resolve, reject) ->
@@ -42,8 +39,8 @@ class ImageFactory
         fs.writeFile targetPath, content, (error) ->
           if error? then reject error else resolve targetPath
 
-  createDirectory: (baseDirectory, imagesFolder) ->
-    imagesDirectoryPath = path.join baseDirectory, imagesFolder
+  createDirectory: (baseDirectory, imagesFolderName) ->
+    imagesDirectoryPath = path.join baseDirectory, imagesFolderName
     imagesDirectory = new Directory imagesDirectoryPath
     imagesDirectory.create().then (created) -> imagesDirectoryPath
 
@@ -52,22 +49,19 @@ class ImageFactory
       fs.writeFile imagePath, buffer, 'binary', (error) ->
         if error? then reject error else resolve imagePath
 
-  createImageName: (currentFileName, imgbuffer) ->
-    md5 = crypto.createHash 'md5'
-    md5.update imgbuffer
-    imageFileNameHash = md5.digest('hex').slice(0, 5)
-
-    baseImageFileName = @cleanImageFilename path.basename currentFileName, path.extname(currentFileName)
-    imageFileName = "#{baseImageFileName}-#{imageFileNameHash}.png"
-
-  insertImage: (activeEditor, imagesFolder, imageFileName) ->
+  insertImage: (activeEditor, imagesFolderName, imageFileName) ->
     appendImagesFolder = atom.config.get 'asciidoc-image-helper.appendImagesFolder'
-    imagePath = if appendImagesFolder then path.join imagesFolder, imageFileName else imageFileName
+    imagePath = if appendImagesFolder then path.join imagesFolderName, imageFileName else imageFileName
     imageMarkup = "image::#{imagePath}[]"
     activeEditor.insertText imageMarkup, activeEditor
     imageMarkup
 
-  cleanImageFilename: (imageFileName) ->
-    imageFileName.replace(/\s+/g, '_')
+  makeImagesFolderName: (currentFile) ->
+    if atom.config.get 'asciidoc-image-helper.dynamicImageFolderName'
+      filePath = currentFile.getPath()
+      path.basename filePath, path.extname filePath
+    else
+      atom.config.get 'asciidoc-image-helper.imagesFolder'
+
 
 module.exports = new ImageFactory

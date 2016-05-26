@@ -1,3 +1,4 @@
+{File} = require 'atom'
 fs = require 'fs'
 path = require 'path'
 temp = require('temp').track()
@@ -70,25 +71,22 @@ describe 'Image factory', ->
         expect(error.code).toBe 'EISDIR'
         expect(error.syscall).toBe 'open'
 
-  describe 'createImageName should', ->
+  describe 'makeImagesFolderName should', ->
 
-    it 'create a random image name when current file have an extension', ->
-      currentFileName = 'myfile.adoc'
-      buffer = 'fake content'
-      imageName = imageFactory.createImageName currentFileName, buffer
+    beforeEach ->
+      waitsForPromise ->
+        atom.packages.activatePackage 'asciidoc-image-helper'
 
-      expect(imageName).toMatch /^myfile-\w+.png$/
+    it 'return the imagesFolder when dynamicImageFolderName is disabled', ->
+      atom.config.set 'asciidoc-image-helper.dynamicImageFolderName', false
+      currentFile = new File path.join __dirname, '..', 'spec/fixtures/logo-atom.png'
+      imagesFolderName = imageFactory.makeImagesFolderName currentFile
 
-    it 'create a random image name when current file does\'t have an extension', ->
-      currentFileName = 'myfile'
-      buffer = 'fake content'
-      imageName = imageFactory.createImageName currentFileName, buffer
+      expect(imagesFolderName).toBe 'images'
 
-      expect(imageName).toMatch /^myfile-\w+.png$/
+    it 'return a folder build from the name of the current file when dynamicImageFolderName is enabled', ->
+      atom.config.set 'asciidoc-image-helper.dynamicImageFolderName', true
+      currentFile = new File path.join __dirname, '..', 'spec/fixtures/fakefile.adoc'
+      imagesFolderName = imageFactory.makeImagesFolderName currentFile
 
-    it 'create a clean image name when currrent filename contains spaces', ->
-      currentFileName = 'my file is cool.adoc'
-      buffer = 'fake content'
-      imageName = imageFactory.createImageName currentFileName, buffer
-
-      expect(imageName).toMatch /^my_file_is_cool-\w+.png$/
+      expect(imagesFolderName).toBe 'fakefile'
