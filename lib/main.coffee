@@ -138,7 +138,8 @@ module.exports =
 
   isImageUrl: (clipboardText) ->
     imageExtensions = atom.config.get 'asciidoc-image-helper.imageExtensions'
-    clipboardText?.length? and path.extname(clipboardText) in imageExtensions and new File(clipboardText).existsSync()
+    safeImageExtensions = imageExtensions.map (ext) -> ext.toLowerCase()
+    clipboardText?.length? and path.extname(clipboardText)?.toLowerCase() in safeImageExtensions and new File(clipboardText).existsSync()
 
   readClipboardText: ->
     clipboardText = clipboard.readText()
