@@ -13,6 +13,7 @@ describe 'Native image with AsciiDoc Image helper should', ->
   [directory, editor, workspaceElement] = []
 
   beforeEach ->
+    atom.config.set 'asciidoc-image-helper.customFilenames', false
     directory = temp.mkdirSync()
     atom.project.setPaths([directory])
     workspaceElement = atom.views.getView(atom.workspace)

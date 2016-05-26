@@ -2,6 +2,8 @@
 clipboard = require 'clipboard'
 path = require 'path'
 imageFactory = require './image-factory'
+CustomNameView = require './custom-name-view'
+filenameHelper = require './filename-helper'
 
 module.exports =
 
@@ -48,10 +50,10 @@ module.exports =
       items:
         type: 'string'
       order: 4
-    # customFilenames:
-    #   description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
-    #   type: 'boolean'
-    #   default: false
+    customFilenames:
+      description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
+      type: 'boolean'
+      default: false
 
   subscriptions: null
   emitter: null
@@ -78,8 +80,7 @@ module.exports =
 
         # Native image support
         if @isImage()
-          event.stopImmediatePropagation()
-          imageFactory.createImage activeEditor, clipboard
+          @storeNativeImage event, activeEditor
             .then successHandler
             .catch errorHandler
 
@@ -88,10 +89,40 @@ module.exports =
           clipboardText = @readClipboardText()
 
           if @isImageUrl clipboardText
-            event.stopImmediatePropagation()
-            imageFactory.copyImage activeEditor, clipboardText
+            @storeImageUrl event, activeEditor, clipboardText
               .then successHandler
               .catch errorHandler
+
+  # Native image support
+  storeNativeImage: (event, activeEditor) ->
+    event.stopImmediatePropagation()
+    imgbuffer = clipboard.readImage().toPng()
+
+    currentFile = new File activeEditor.getPath()
+    imageFileName = filenameHelper.generateImageName path.basename(currentFile.getBaseName()), imgbuffer
+
+    new Promise (resolve, rejet) ->
+      if atom.config.get 'asciidoc-image-helper.customFilenames'
+        dialog = new CustomNameView initialImageName: imageFileName
+        dialog.attach()
+        dialog.onDidConfirm (custom) ->
+          resolve imageFactory.createImage activeEditor, currentFile, imgbuffer, custom.imageName
+      else
+        resolve imageFactory.createImage activeEditor, currentFile, imgbuffer, imageFileName
+
+  # Image URL support
+  storeImageUrl: (event, activeEditor, clipboardText) ->
+    event.stopImmediatePropagation()
+    imageFileName = filenameHelper.cleanImageFilename path.basename clipboardText
+
+    new Promise (resolve, rejet) ->
+      if atom.config.get 'asciidoc-image-helper.customFilenames'
+        dialog = new CustomNameView initialImageName: imageFileName
+        dialog.attach()
+        dialog.onDidConfirm (custom) ->
+          resolve imageFactory.copyImage activeEditor, clipboardText, custom.imageName
+      else
+        resolve imageFactory.copyImage activeEditor, clipboardText, imageFileName
 
   isImage: ->
     not clipboard.readImage().isEmpty()

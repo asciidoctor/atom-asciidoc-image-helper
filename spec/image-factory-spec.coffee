@@ -69,26 +69,3 @@ describe 'Image factory', ->
         expect(error.errno).toBeLessThan 0
         expect(error.code).toBe 'EISDIR'
         expect(error.syscall).toBe 'open'
-
-  describe 'createImageName should', ->
-
-    it 'create a random image name when current file have an extension', ->
-      currentFileName = 'myfile.adoc'
-      buffer = 'fake content'
-      imageName = imageFactory.createImageName currentFileName, buffer
-
-      expect(imageName).toMatch /^myfile-\w+.png$/
-
-    it 'create a random image name when current file does\'t have an extension', ->
-      currentFileName = 'myfile'
-      buffer = 'fake content'
-      imageName = imageFactory.createImageName currentFileName, buffer
-
-      expect(imageName).toMatch /^myfile-\w+.png$/
-
-    it 'create a clean image name when currrent filename contains spaces', ->
-      currentFileName = 'my file is cool.adoc'
-      buffer = 'fake content'
-      imageName = imageFactory.createImageName currentFileName, buffer
-
-      expect(imageName).toMatch /^my_file_is_cool-\w+.png$/
