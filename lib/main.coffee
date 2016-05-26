@@ -19,6 +19,15 @@ module.exports =
       type: 'string'
       default: 'images'
       order: 1
+    dynamicImageFolderName:
+      title: 'Place images in folder that is the same as the filename (without the extension)'
+      description: '''
+        Place images in a folder named after the filename.
+        This will offer a dynamic image folder name, and override the "Images Folder" setting.
+        '''
+      type: 'boolean'
+      default: false
+      order: 2
     appendImagesFolder:
       title: 'Append `imagesFolder` in generated links.'
       description: '''
@@ -28,7 +37,7 @@ module.exports =
         '''
       type: 'boolean'
       default: true
-      order: 2
+      order: 3
     enableUrlSupport:
       description: '''
         Enabled clipboard tracking for image URL.
@@ -38,7 +47,7 @@ module.exports =
         '''
       type: 'boolean'
       default: false
-      order: 3
+      order: 4
     imageExtensions:
       description: '''
         Related to clipboard tracking for file URL.
@@ -49,7 +58,7 @@ module.exports =
       default: ['.png', '.jpg', '.jpeg', '.bmp', '.svg', '.gif']
       items:
         type: 'string'
-      order: 4
+      order: 5
     customFilenames:
       description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
       type: 'boolean'

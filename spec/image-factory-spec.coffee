@@ -1,3 +1,4 @@
+{File} = require 'atom'
 fs = require 'fs'
 path = require 'path'
 temp = require('temp').track()
@@ -69,3 +70,23 @@ describe 'Image factory', ->
         expect(error.errno).toBeLessThan 0
         expect(error.code).toBe 'EISDIR'
         expect(error.syscall).toBe 'open'
+
+  describe 'makeImagesFolderName should', ->
+
+    beforeEach ->
+      waitsForPromise ->
+        atom.packages.activatePackage 'asciidoc-image-helper'
+
+    it 'return the imagesFolder when dynamicImageFolderName is disabled', ->
+      atom.config.set 'asciidoc-image-helper.dynamicImageFolderName', false
+      currentFile = new File path.join __dirname, '..', 'spec/fixtures/logo-atom.png'
+      imagesFolderName = imageFactory.makeImagesFolderName currentFile
+
+      expect(imagesFolderName).toBe 'images'
+
+    it 'return a folder build from the name of the current file when dynamicImageFolderName is enabled', ->
+      atom.config.set 'asciidoc-image-helper.dynamicImageFolderName', true
+      currentFile = new File path.join __dirname, '..', 'spec/fixtures/fakefile.adoc'
+      imagesFolderName = imageFactory.makeImagesFolderName currentFile
+
+      expect(imagesFolderName).toBe 'fakefile'

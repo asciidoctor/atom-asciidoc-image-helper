@@ -9,8 +9,9 @@ class ImageFactory
   # Copy image from an URL in the clipboard
   #
   copyImage: (activeEditor, srcImagePath, imageFileName) ->
-    imagesFolderName = atom.config.get 'asciidoc-image-helper.imagesFolder'
     currentFile = new File activeEditor.getPath()
+
+    imagesFolderName = @makeImagesFolderName currentFile
     currentDirectory = currentFile.getParent().getPath()
 
     @createDirectory currentDirectory, imagesFolderName
@@ -23,7 +24,7 @@ class ImageFactory
   # Create an image from an image in the clipboard (ex: screenshot)
   #
   createImage: (activeEditor, currentFile, imgbuffer, imageFileName) ->
-    imagesFolderName = atom.config.get 'asciidoc-image-helper.imagesFolder'
+    imagesFolderName = @makeImagesFolderName currentFile
 
     @createDirectory currentFile.getParent().getPath(), imagesFolderName
       .then (imagesDirectoryPath) =>
@@ -54,5 +55,13 @@ class ImageFactory
     imageMarkup = "image::#{imagePath}[]"
     activeEditor.insertText imageMarkup, activeEditor
     imageMarkup
+
+  makeImagesFolderName: (currentFile) ->
+    if atom.config.get 'asciidoc-image-helper.dynamicImageFolderName'
+      filePath = currentFile.getPath()
+      path.basename filePath, path.extname filePath
+    else
+      atom.config.get 'asciidoc-image-helper.imagesFolder'
+
 
 module.exports = new ImageFactory
