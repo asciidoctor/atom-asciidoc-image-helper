@@ -80,7 +80,7 @@ module.exports =
 
         # Native image support
         if @isImage()
-          @storeNativeImage event, activeEditor
+          @pasteNativeImage event, activeEditor
             .then successHandler
             .catch errorHandler
 
@@ -89,12 +89,12 @@ module.exports =
           clipboardText = @readClipboardText()
 
           if @isImageUrl clipboardText
-            @storeImageUrl event, activeEditor, clipboardText
+            @pasteImageUrl event, activeEditor, clipboardText
               .then successHandler
               .catch errorHandler
 
   # Native image support
-  storeNativeImage: (event, activeEditor) ->
+  pasteNativeImage: (event, activeEditor) ->
     event.stopImmediatePropagation()
     imgbuffer = clipboard.readImage().toPng()
 
@@ -111,7 +111,7 @@ module.exports =
         resolve imageFactory.createImage activeEditor, currentFile, imgbuffer, imageFileName
 
   # Image URL support
-  storeImageUrl: (event, activeEditor, clipboardText) ->
+  pasteImageUrl: (event, activeEditor, clipboardText) ->
     event.stopImmediatePropagation()
     imageFileName = filenameHelper.cleanImageFilename path.basename clipboardText
 
