@@ -50,18 +50,18 @@ class ImageFactory
         if error? then reject error else resolve imagePath
 
   insertImage: (activeEditor, imagesFolderName, imageFileName) ->
-    appendImagesFolder = atom.config.get 'asciidoc-image-helper.appendImagesFolder'
+    appendImagesFolder = atom.config.get 'asciidoc-image-helper.imageFolder.append'
     imagePath = if appendImagesFolder then path.join imagesFolderName, imageFileName else imageFileName
     imageMarkup = "image::#{imagePath}[]"
     activeEditor.insertText imageMarkup, activeEditor
     imageMarkup
 
   makeImagesFolderName: (currentFile) ->
-    if atom.config.get 'asciidoc-image-helper.dynamicImageFolderName'
+    if atom.config.get 'asciidoc-image-helper.imageFolder.dynamicName'
       filePath = currentFile.getPath()
       path.basename filePath, path.extname filePath
     else
-      atom.config.get 'asciidoc-image-helper.imagesFolder'
+      atom.config.get 'asciidoc-image-helper.imageFolder.name'
 
 
 module.exports = new ImageFactory

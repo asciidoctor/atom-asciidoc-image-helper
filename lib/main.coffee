@@ -7,63 +7,6 @@ filenameHelper = require './filename-helper'
 
 module.exports =
 
-  # Configuration Schema
-  config:
-    imagesFolder:
-      description: '''
-        The folder name that image files should be pasted into.
-
-        The default is an `images` folder in the same folder as the asciidoc file.
-        For subfolders, enter something like `assets/images` without the leading or trailing foreward slash.
-        '''
-      type: 'string'
-      default: 'images'
-      order: 1
-    dynamicImageFolderName:
-      title: 'Place images in folder that is the same as the filename (without the extension)'
-      description: '''
-        Place images in a folder named after the filename.
-        This will offer a dynamic image folder name, and override the "Images Folder" setting.
-        '''
-      type: 'boolean'
-      default: false
-      order: 2
-    appendImagesFolder:
-      title: 'Append `imagesFolder` in generated links.'
-      description: '''
-        image::images/foo-bdb66.png[] # `true` (default)
-
-        image::foo-bdb66.png[] # `false` (You are using the `:imagesdir:` attribute in your document.)
-        '''
-      type: 'boolean'
-      default: true
-      order: 3
-    enableUrlSupport:
-      description: '''
-        Enabled clipboard tracking for image URL.
-
-        Use with caution: any valid paths contains in the clipboard will be converted to links.
-        Support: png.
-        '''
-      type: 'boolean'
-      default: false
-      order: 4
-    imageExtensions:
-      description: '''
-        Related to clipboard tracking for file URL.
-
-        Specify image file extensions to be converted to links.
-        '''
-      type: 'array'
-      default: ['.png', '.jpg', '.jpeg', '.bmp', '.svg', '.gif']
-      items:
-        type: 'string'
-      order: 5
-    customFilenames:
-      description: 'Enable prompt for custom string to be added into the filename on paste action into document.'
-      type: 'boolean'
-      default: false
-
   subscriptions: null
   emitter: null
 
@@ -94,7 +37,7 @@ module.exports =
             .catch errorHandler
 
         # Image URL support
-        else if atom.config.get 'asciidoc-image-helper.enableUrlSupport'
+        else if atom.config.get 'asciidoc-image-helper.urlSupport.enable'
           clipboardText = @readClipboardText()
 
           if @isImageUrl clipboardText
@@ -137,7 +80,7 @@ module.exports =
     not clipboard.readImage().isEmpty()
 
   isImageUrl: (clipboardText) ->
-    imageExtensions = atom.config.get 'asciidoc-image-helper.imageExtensions'
+    imageExtensions = atom.config.get 'asciidoc-image-helper.urlSupport.imageExtensions'
     safeImageExtensions = imageExtensions.map (ext) -> ext.toLowerCase()
     clipboardText?.length? and path.extname(clipboardText)?.toLowerCase() in safeImageExtensions and new File(clipboardText).existsSync()
 

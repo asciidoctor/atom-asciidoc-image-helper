@@ -38,8 +38,8 @@ describe 'URL with AsciiDoc Image helper should', ->
     called = false
     asciiDocimageHelper.onDidInsert -> called = true
 
-    atom.config.set 'asciidoc-image-helper.appendImagesFolder', true # Default
-    atom.config.set 'asciidoc-image-helper.enableUrlSupport', true
+    atom.config.set 'asciidoc-image-helper.imageFolder.append', true # Default
+    atom.config.set 'asciidoc-image-helper.urlSupport.enable', true
 
     editor = atom.workspace.getActiveTextEditor()
     expect(editor.getPath()).toMatch /^.*(\/|\\)foobar\.adoc$/
@@ -57,7 +57,7 @@ describe 'URL with AsciiDoc Image helper should', ->
     runs ->
       editor.selectAll()
       expect(editor.getSelectedText()).toMatch /image::images(\/|\\)logo-atom\.png\[\]/
-      imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
+      imagesFolder = atom.config.get 'asciidoc-image-helper.imageFolder.name'
       stat = fs.statSync path.join directory, imagesFolder, imageName
       expect(stat).toBeDefined()
       expect(stat.size).toBe 6258
@@ -67,8 +67,8 @@ describe 'URL with AsciiDoc Image helper should', ->
     called = false
     asciiDocimageHelper.onDidInsert -> called = true
 
-    atom.config.set 'asciidoc-image-helper.appendImagesFolder', true # Default
-    atom.config.set 'asciidoc-image-helper.enableUrlSupport', true
+    atom.config.set 'asciidoc-image-helper.imageFolder.append', true # Default
+    atom.config.set 'asciidoc-image-helper.urlSupport.enable', true
 
     editor = atom.workspace.getActiveTextEditor()
     expect(editor.getPath()).toMatch /^.*(\/|\\)foobar\.adoc$/
@@ -86,7 +86,7 @@ describe 'URL with AsciiDoc Image helper should', ->
     runs ->
       editor.selectAll()
       expect(editor.getSelectedText()).toMatch /image::images(\/|\\)logo-atom\.png\[\]/
-      imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
+      imagesFolder = atom.config.get 'asciidoc-image-helper.imageFolder.name'
       stat = fs.statSync path.join directory, imagesFolder, imageName
       expect(stat).toBeDefined()
       expect(stat.size).toBe 6258
@@ -96,8 +96,8 @@ describe 'URL with AsciiDoc Image helper should', ->
     called = false
     asciiDocimageHelper.onDidInsert -> called = true
 
-    atom.config.set 'asciidoc-image-helper.appendImagesFolder', true # Default
-    atom.config.set 'asciidoc-image-helper.enableUrlSupport', true
+    atom.config.set 'asciidoc-image-helper.imageFolder.append', true # Default
+    atom.config.set 'asciidoc-image-helper.urlSupport.enable', true
 
     editor = atom.workspace.getActiveTextEditor()
     expect(editor.getPath()).toMatch /^.*(\/|\\)foobar\.adoc$/
@@ -115,7 +115,7 @@ describe 'URL with AsciiDoc Image helper should', ->
     runs ->
       editor.selectAll()
       expect(editor.getSelectedText()).toMatch /image::images(\/|\\)logo-atom\.png\[\]/
-      imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
+      imagesFolder = atom.config.get 'asciidoc-image-helper.imageFolder.name'
       stat = fs.statSync path.join directory, imagesFolder, imageName
       expect(stat).toBeDefined()
       expect(stat.size).toBe 6258
@@ -125,9 +125,9 @@ describe 'URL with AsciiDoc Image helper should', ->
     called = false
     asciiDocimageHelper.onDidInsert -> called = true
 
-    atom.config.set 'asciidoc-image-helper.appendImagesFolder', true # Default
-    atom.config.set 'asciidoc-image-helper.enableUrlSupport', true
-    atom.config.set 'asciidoc-image-helper.imagesFolder', 'foo'
+    atom.config.set 'asciidoc-image-helper.imageFolder.append', true # Default
+    atom.config.set 'asciidoc-image-helper.urlSupport.enable', true
+    atom.config.set 'asciidoc-image-helper.imageFolder.name', 'foo'
 
     editor = atom.workspace.getActiveTextEditor()
     expect(editor.getPath()).toMatch /^.*(\/|\\)foobar\.adoc$/
@@ -145,7 +145,7 @@ describe 'URL with AsciiDoc Image helper should', ->
     runs ->
       editor.selectAll()
       expect(editor.getSelectedText()).toMatch /image::foo(\/|\\)logo-atom\.png\[\]/
-      imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
+      imagesFolder = atom.config.get 'asciidoc-image-helper.imageFolder.name'
       stat = fs.statSync path.join directory, imagesFolder, imageName
       expect(stat).toBeDefined()
       expect(stat.size).toBe 6258
@@ -155,8 +155,8 @@ describe 'URL with AsciiDoc Image helper should', ->
     called = false
     asciiDocimageHelper.onDidInsert -> called = true
 
-    atom.config.set 'asciidoc-image-helper.appendImagesFolder', false
-    atom.config.set 'asciidoc-image-helper.enableUrlSupport', true
+    atom.config.set 'asciidoc-image-helper.imageFolder.append', false
+    atom.config.set 'asciidoc-image-helper.urlSupport.enable', true
 
     editor = atom.workspace.getActiveTextEditor()
     expect(editor.getPath()).toMatch /^.*(\/|\\)foobar\.adoc$/
@@ -174,7 +174,7 @@ describe 'URL with AsciiDoc Image helper should', ->
     runs ->
       editor.selectAll()
       expect(editor.getSelectedText()).toBe 'image::logo-atom.png[]'
-      imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
+      imagesFolder = atom.config.get 'asciidoc-image-helper.imageFolder.name'
       stat = fs.statSync path.join directory, imagesFolder, imageName
       expect(stat).toBeDefined()
       expect(stat.size).toBe 6258
@@ -184,9 +184,9 @@ describe 'URL with AsciiDoc Image helper should', ->
     called = false
     asciiDocimageHelper.onDidInsert -> called = true
 
-    atom.config.set 'asciidoc-image-helper.appendImagesFolder', false
-    atom.config.set 'asciidoc-image-helper.enableUrlSupport', true
-    atom.config.set 'asciidoc-image-helper.imagesFolder', 'bar'
+    atom.config.set 'asciidoc-image-helper.imageFolder.append', false
+    atom.config.set 'asciidoc-image-helper.urlSupport.enable', true
+    atom.config.set 'asciidoc-image-helper.imageFolder.name', 'bar'
 
     editor = atom.workspace.getActiveTextEditor()
     expect(editor.getPath()).toMatch /^.*(\/|\\)foobar\.adoc$/
@@ -204,7 +204,7 @@ describe 'URL with AsciiDoc Image helper should', ->
     runs ->
       editor.selectAll()
       expect(editor.getSelectedText()).toBe 'image::logo-atom.png[]'
-      imagesFolder = atom.config.get 'asciidoc-image-helper.imagesFolder'
+      imagesFolder = atom.config.get 'asciidoc-image-helper.imageFolder.name'
       stat = fs.statSync path.join directory, imagesFolder, imageName
       expect(stat).toBeDefined()
       expect(stat.size).toBe 6258

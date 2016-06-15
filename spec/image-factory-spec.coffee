@@ -78,14 +78,14 @@ describe 'Image factory', ->
         atom.packages.activatePackage 'asciidoc-image-helper'
 
     it 'return the imagesFolder when dynamicImageFolderName is disabled', ->
-      atom.config.set 'asciidoc-image-helper.dynamicImageFolderName', false
+      atom.config.set 'asciidoc-image-helper.imageFolder.dynamicName', false
       currentFile = new File path.join __dirname, '..', 'spec/fixtures/logo-atom.png'
       imagesFolderName = imageFactory.makeImagesFolderName currentFile
 
       expect(imagesFolderName).toBe 'images'
 
     it 'return a folder build from the name of the current file when dynamicImageFolderName is enabled', ->
-      atom.config.set 'asciidoc-image-helper.dynamicImageFolderName', true
+      atom.config.set 'asciidoc-image-helper.imageFolder.dynamicName', true
       currentFile = new File path.join __dirname, '..', 'spec/fixtures/fakefile.adoc'
       imagesFolderName = imageFactory.makeImagesFolderName currentFile
 

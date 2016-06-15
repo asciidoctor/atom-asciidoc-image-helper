@@ -21,5 +21,65 @@
   "devDependencies": {
     "coffeelint": "^1.15.0",
     "temp": "~0.8.3"
+  },
+  "configSchema": {
+    "customFilenames": {
+      "description": "Enable prompt for custom string to be added into the filename on paste action into document.",
+      "type": "boolean",
+      "default": false,
+      "order": 1
+    },
+    "imageFolder": {
+      "title": "Image folder",
+      "type": "object",
+      "order": 3,
+      "properties": {
+        "name": {
+          "title": "Folder name",
+          "description": "The folder name that image files should be pasted into.<br>The default is an `images` folder in the same folder as the asciidoc file.<br>For subfolders, enter something like `assets/images` without the leading or trailing foreward slash.",
+          "type": "string",
+          "default": "images",
+          "order": 1
+        },
+        "dynamicName": {
+          "title": "Place images in folder that is the same as the filename (without the extension)",
+          "description": "Place images in a folder named after the filename.<br>This will offer a dynamic image folder name, and **override the 'Images Folder' setting.**",
+          "type": "boolean",
+          "default": false,
+          "order": 2
+        },
+        "append": {
+          "title": "Append `imagesFolder` in generated links.",
+          "description": "`image::images/foo-bdb66.png[]` # `true` (default)<br>`image::foo-bdb66.png[]` # `false` (You are using the `:imagesdir:` attribute in your document.)",
+          "type": "boolean",
+          "default": true,
+          "order": 3
+        }
+      }
+    },
+    "urlSupport": {
+      "title": "URL support",
+      "type": "object",
+      "order": 3,
+      "properties": {
+        "enable": {
+          "title": "Enable",
+          "description": "Enabled clipboard tracking for image URL.<br>**Use with caution:** any valid paths contains in the clipboard will be converted to links.<br>Support: png.",
+          "type": "boolean",
+          "default": false,
+          "order": 1
+        },
+        "imageExtensions": {
+          "title": "Image extensions",
+          "description": "Related to clipboard tracking for file URL.<br>Specify image file extensions to be converted to links.",
+          "type": "array",
+          "default": [".png", ".jpg", ".jpeg", ".bmp", ".svg", ".gif"],
+          "items": {
+            "type": "string"
+          },
+          "order": 2
+        }
+      }
+    }
   }
 }
