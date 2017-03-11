@@ -2,8 +2,8 @@ temp = require('temp').track()
 path = require 'path'
 fs = require 'fs'
 remote = require 'remote'
-nativeImage = remote.require 'native-image'
-clipboard = remote.require 'clipboard'
+nativeImage = remote.nativeImage
+clipboard = remote.clipboard
 asciiDocimageHelper = require '../lib/main'
 fakeAsciiDocGrammarBuilder = require './fixtures/fake-asciidoc-grammar-builder'
 
