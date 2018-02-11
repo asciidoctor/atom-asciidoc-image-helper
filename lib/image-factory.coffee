@@ -52,7 +52,7 @@ class ImageFactory
   insertImage: (activeEditor, imagesFolderName, imageFileName) ->
     appendImagesFolder = atom.config.get 'asciidoc-image-helper.imageFolder.append'
     imagePath = if appendImagesFolder then path.join imagesFolderName, imageFileName else imageFileName
-    imageMarkup = "image::#{imagePath}[]"
+    imageMarkup = "image::#{encodeURI(imagePath)}[]"
     activeEditor.insertText imageMarkup, activeEditor
     imageMarkup
 
