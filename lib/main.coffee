@@ -48,7 +48,11 @@ module.exports =
   # Native image support
   pasteNativeImage: (event, activeEditor) ->
     event.stopImmediatePropagation()
-    imgbuffer = clipboard.readImage().toPng()
+    # since Atom v1.28.0 https://github.com/atom/atom/releases/tag/v1.28.0:
+    # - nativeImage.toPng() -> nativeImage.toPNG()
+    # It's related to the upgrade to Electon 2.0:
+    # - https://github.com/electron/electron/blob/master/docs/api/breaking-changes.md#breaking-api-changes-20
+    imgbuffer = clipboard.readImage().toPNG()
 
     currentFile = new File activeEditor.getPath()
     imageFileName = filenameHelper.generateImageName path.basename(currentFile.getBaseName()), imgbuffer

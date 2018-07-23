@@ -13,7 +13,7 @@
   "repository": "https://github.com/asciidoctor/atom-asciidoc-image-helper",
   "license": "MIT",
   "engines": {
-    "atom": ">=1.0.0 <2.0.0"
+    "atom": ">=1.28.0 <2.0.0"
   },
   "dependencies": {
     "atom-space-pen-views": "^2.2.0"
