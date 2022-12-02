@@ -1,3 +1,12 @@
+### :information_source: **Information** :information_source:
+
+[GitHub is sunsetting Atom on December 15, 2022](https://github.blog/2022-06-08-sunsetting-atom/).   
+As a result, we recommend migrating to an alternative solution. The Asciidoctor community is now focusing on providing the best writing experience using the [IntelliJ platform](https://github.com/asciidoctor/asciidoctor-intellij-plugin) or [Visual Studio Code](https://github.com/asciidoctor/asciidoctor-vscode).
+
+On December 15, 2022, this repository will be archived.
+
+---
+
 # AsciiDoc Image Helper
 
 [![Atom Package](https://img.shields.io/apm/v/asciidoc-image-helper.svg)](https://atom.io/packages/asciidoc-image-helper)
